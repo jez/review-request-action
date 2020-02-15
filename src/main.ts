@@ -3,8 +3,7 @@ import { context, GitHub } from '@actions/github'
 
 export async function run() {
   try {
-    const
-      repoToken = core.getInput('repo-token', { required: true }),
+    const repoToken = core.getInput('repo-token', { required: true }),
       issue: { owner: string; repo: string; number: number } = context.issue
 
     if (context.payload.action !== 'opened') {
@@ -14,20 +13,29 @@ export async function run() {
 
     const client = new GitHub(repoToken)
 
-    const reviewers = core.getInput('reviewers').split(',').map(a => a.trim()).filter(a => a)
-    const teamReviewers = core.getInput('team-reviewers').split(',').map(a => a.trim()).filter(a => a)
+    const reviewers = core
+      .getInput('reviewers')
+      .split(',')
+      .map(a => a.trim())
+    const teamReviewers = core
+      .getInput('team-reviewers')
+      .split(',')
+      .map(a => a.trim())
 
-    await client.pulls.createReviewRequest(
-      {
-        owner: issue.owner,
-        repo: issue.repo,
-        pull_number: issue.number,
-        reviewers: reviewers,
-        team_reviewers: teamReviewers
-      }
-    )
+    console.log(reviewers)
+    console.log(teamReviewers)
 
+    await client.pulls.createReviewRequest({
+      owner: issue.owner,
+      repo: issue.repo,
+      pull_number: issue.number,
+      reviewers: reviewers,
+      team_reviewers: teamReviewers
+    })
+
+    console.log('!!! done !!!')
   } catch (error) {
+    console.log('!!! error !!!')
     core.setFailed(error.message)
     throw error
   }

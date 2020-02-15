@@ -22,16 +22,17 @@ export async function run() {
       .split(',')
       .map(a => a.trim())
 
-    console.log(reviewers)
-    console.log(teamReviewers)
-
-    await client.pulls.createReviewRequest({
+    const args = {
       owner: issue.owner,
       repo: issue.repo,
       pull_number: issue.number,
       reviewers: reviewers,
       team_reviewers: teamReviewers
-    })
+    }
+
+    console.log(args)
+
+    await client.pulls.createReviewRequest(args)
 
     console.log('!!! done !!!')
   } catch (error) {
